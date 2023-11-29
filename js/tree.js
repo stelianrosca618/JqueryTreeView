@@ -50,7 +50,7 @@ treeselect.srcElement.addEventListener('input', (e) => {
   e.detail.map(valItem => {
     let optionItem = null
     var iCounter = 0;
-    for(iCounter = 0; iCounter < treeselect.options.length; inum++){
+    for(iCounter = 0; iCounter < treeselect.options.length; iCounter++){
       optionItem = searchTree(treeselect.options[iCounter], valItem);
       if(optionItem != null && optionItem != undefined) {break ; }
     }
