@@ -40,54 +40,13 @@ const treeselect = new Treeselect({
     appendToBody: true,
     listSlotHtmlComponent: null,
     disabled: false,
-    isGroupedValue: true,
+    isGroupedValue: false,
     expandSelected: true,
-    isIndependentNodes: true,
+    isIndependentNodes: false,
     emptyText: 'No data text',
 })
 treeselect.srcElement.addEventListener('input', (e) => {
-  
-  e.detail.map(valItem => {
-    let optionItem = null
-    var iCounter = 0;
-    for(iCounter = 0; iCounter < treeselect.options.length; inum++){
-      optionItem = searchTree(treeselect.options[iCounter], valItem);
-      if(optionItem != null && optionItem != undefined) {break ; }
-    }
-  const elementSrc = `<div class="treeselect-input__tags-element" tabindex="-1" tag-id="${optionItem.value}" title="${optionItem.name}">
-    <span class="treeselect-input__tags-name">${optionItem.name}</span>
-    <span class="treeselect-input__tags-cross">
-      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 25 25" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </span>
-    </div>`;
-    treeselect.srcElement.querySelector('.treeselect-input__tags').innerHTML += elementSrc;
-  })
+  console.log("getting Child Values", treeselect.value);
+  console.log("Parent RelationData",  e.detail);
 
 })
-
-treeselect.srcElement.addEventListener('close', (e) => {
-  // ...
-  console.log('close', e);
-})
-
-
-function searchTree(element, matchingTitle){
-  
-  if(element.value == matchingTitle){
-       return element;
-  }else if (element.value != matchingTitle && element.children.length > 0){
-       let i = 0;
-       let result = null;
-       for(i=0; i < element.children.length; i++){
-            result = searchTree(element.children[i], matchingTitle);
-            if(result != null && result != undefined){
-              break;
-            }
-       }
-       return result;
-       
-  }
-}
