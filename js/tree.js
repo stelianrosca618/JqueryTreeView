@@ -1,4 +1,41 @@
 import Treeselect from '../lib/treeselect-js.js';
+const inputArr1=
+[
+{"family":"ABC_PARENT_NAME_1","family_value":"abc_parent_value_1","apiId":1,"api":"abc_child_name1","isDefault":"Y"},
+{"family":"ABC_PARENT_NAME_1","family_value":"abc_parent_value_1","apiId":2,"api":"abc_child_name2","isDefault":"Y"},
+{"family":"ABC_PARENT_NAME_1","family_value":"abc_parent_value_1","apiId":3,"api":"abc_child_name3","isDefault":"Y"},
+{"family":"XYZ_PARENT_NAME_1","family_value":"xyz_parent_value_1","apiId":4,"api":"xyz_child_name1","isDefault":"Y"},
+{"family":"XYZ_PARENT_NAME_1","family_value":"xyz_parent_value_1","apiId":5,"api":"xyz_child_name2","isDefault":"Y"}
+];
+function makeOptions(apiArr){
+    const tmpOptions = [];
+    apiArr.map(arrItem => {
+        const existOption = tmpOptions.find(tmpItem => tmpItem.name == arrItem.family);
+        if(existOption){
+            existOption.children.push({
+                name: arrItem.api,
+                value: arrItem.apiId,
+                children: [],
+            })
+        }else{
+            tmpOptions.push({
+                name: arrItem.family,
+                value: arrItem.family_value,
+                children: [{
+                    name: arrItem.api,
+                    value: arrItem.apiId,
+                    children: [],
+                }],
+            })    
+        }
+        
+    })
+    return tmpOptions;
+};
+
+const testOption = makeOptions(inputArr1);
+console.log("testOption", testOption);
+
 const options = [{
     name: 'JavaScript',
     value: 'JavaScript',
@@ -28,66 +65,39 @@ const options = [{
         children: []
     }]
 }]
+
+let treeValues;
+let treeRelatinVals;
+
 const slot = document.createElement('div')
 slot.innerHTML = '<a class="test" href="">Add new element</a>'
 const domEl = document.querySelector('.treeselect-test')
 const treeselect = new Treeselect({
     parentHtmlContainer: domEl,
     value: [],
-    options: options,
+    options: testOption,
     alwaysOpen: false,
     showTags: true,
     appendToBody: true,
     listSlotHtmlComponent: null,
     disabled: false,
-    isGroupedValue: true,
+    isGroupedValue: false,
     expandSelected: true,
-    isIndependentNodes: true,
+    isIndependentNodes: false,
     emptyText: 'No data text',
 })
 treeselect.srcElement.addEventListener('input', (e) => {
-  
-  e.detail.map(valItem => {
-    let optionItem = null
-    var iCounter = 0;
-    for(iCounter = 0; iCounter < treeselect.options.length; inum++){
-      optionItem = searchTree(treeselect.options[iCounter], valItem);
-      if(optionItem != null && optionItem != undefined) {break ; }
-    }
-  const elementSrc = `<div class="treeselect-input__tags-element" tabindex="-1" tag-id="${optionItem.value}" title="${optionItem.name}">
-    <span class="treeselect-input__tags-name">${optionItem.name}</span>
-    <span class="treeselect-input__tags-cross">
-      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 25 25" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </span>
-    </div>`;
-    treeselect.srcElement.querySelector('.treeselect-input__tags').innerHTML += elementSrc;
-  })
-
+  console.log("getting Child Values", treeselect.value);
+  treeValues = treeselect.value; 
+  console.log("Parent RelationData",  e.detail);
+  treeRelatinVals = e.detail;
 })
 
-treeselect.srcElement.addEventListener('close', (e) => {
-  // ...
-  console.log('close', e);
+document.getElementById("result-Btn").addEventListener('click', (e) => {
+    console.log('Result', treeValues, treeRelatinVals);
 })
-
-
-function searchTree(element, matchingTitle){
   
-  if(element.value == matchingTitle){
-       return element;
-  }else if (element.value != matchingTitle && element.children.length > 0){
-       let i = 0;
-       let result = null;
-       for(i=0; i < element.children.length; i++){
-            result = searchTree(element.children[i], matchingTitle);
-            if(result != null && result != undefined){
-              break;
-            }
-       }
-       return result;
-       
-  }
+
+function formSubmitOrButtonClick() {
+    console.log('Result', treeValues, treeRelatinVals);
 }
