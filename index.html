@@ -23,16 +23,19 @@
 <script >
   let childOfArr = [];
   function callBtnVals(){
+    if(window.treeRelatinVals){
+      console.log('Result', treeValues, treeRelatinVals);
+      treeRelatinVals.map(relateVal => {
+          const existItem = childOfArr.find(chItem => chItem == relateVal.childOf);
+          if(!existItem){
+              childOfArr.push(relateVal.childOf);
+          }
+      })
+      console.log("ParentName Array", childOfArr);
+    }else{
+      console.log("Empty Data")
+    }
     
-    console.log('Result', treeValues, treeRelatinVals);
-    
-    treeRelatinVals.map(relateVal => {
-        const existItem = childOfArr.find(chItem => chItem == relateVal.childOf);
-        if(!existItem){
-            childOfArr.push(relateVal.childOf);
-        }
-    })
-    console.log("ParentName Array", childOfArr);
   }
 </script>
 </html>

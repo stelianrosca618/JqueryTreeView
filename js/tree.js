@@ -1,12 +1,41 @@
-import Treeselect from '../lib/treeselect-js.js';
-const inputArr1=
-[
-{"family":"ABC_PARENT_NAME_1","family_value":"abc_parent_value_1","apiId":1,"api":"abc_child_name1","isDefault":"Y"},
-{"family":"ABC_PARENT_NAME_1","family_value":"abc_parent_value_1","apiId":2,"api":"abc_child_name2","isDefault":"Y"},
-{"family":"ABC_PARENT_NAME_1","family_value":"abc_parent_value_1","apiId":3,"api":"abc_child_name3","isDefault":"Y"},
-{"family":"XYZ_PARENT_NAME_1","family_value":"xyz_parent_value_1","apiId":4,"api":"xyz_child_name1","isDefault":"Y"},
-{"family":"XYZ_PARENT_NAME_1","family_value":"xyz_parent_value_1","apiId":5,"api":"xyz_child_name2","isDefault":"Y"}
-];
+
+import Treeselect from './treeselect-js.js';
+
+let family_api_array=[];
+payload = {}
+let ajaxRequest = $.ajax({
+    type: "POST",
+    url: getPredefinedApis,
+    data: JSON.stringify(payload),
+    success: function (response) {
+        if (response.length > 0) {
+            let full_family_api_mapping_tmp=[];
+            for (let i = 0; i < response.length; i++) {
+                let apiId = response[i]["family_api_id"];
+                let family_id=response[i]["family_id"];
+                let family_value=response[i]["family_value"];
+                let api=response[i]["api_name"];
+                let family=response[i]["family"];
+                let isDefault=response[i]["isdefault"];
+                let f_item = {"family":family,"family_value":family_value,"apiId":apiId,"api":api,"isDefault":isDefault};
+                full_family_api_mapping_tmp.push(f_item);
+            }
+            console.log("----------- full_family_api_mapping_tmp ---- "+JSON.stringify(full_family_api_mapping_tmp));
+            family_api_array = full_family_api_mapping_tmp;
+            assignvar();
+        }
+        //console.log("ajax ---------------------------- "+full_family_api_mapping_tmp)
+        return { ok: true, data: response };
+    },
+    error: function (error) {
+        console.log("Something went wrong");
+        console.log(error.responseText);
+        return { ok: "false" }
+    }
+});
+
+
+
 function makeOptions(apiArr){
     const tmpOptions = [];
     apiArr.map(arrItem => {
@@ -22,95 +51,45 @@ function makeOptions(apiArr){
                 name: arrItem.family,
                 value: arrItem.family_value,
                 children: [{
-                    name: arrItem.api,
-                    value: arrItem.apiId,
-                    children: [],
+                name: arrItem.api,
+                value: arrItem.apiId,
+                children: [],
                 }],
-            })    
+            })
         }
-        
+
     })
     return tmpOptions;
 };
 
-const testOption = makeOptions(inputArr1);
-console.log("testOption", testOption);
+function assignvar(){
+    const testOption = makeOptions(family_api_array);
 
-const options = [{
-    name: 'JavaScript',
-    value: 'JavaScript',
-    children: [{
-        name: 'React',
-        value: 'React',
-        children: []
-    }, {
-        name: 'Vue',
-        value: 'Vue',
-        children: []
-    }, {
-        name: 'Angular',
-        value: 'Angular',
-        children: []
-    }]
-}, {
-    name: 'HTML',
-    value: 'html',
-    children: [{
-        name: 'HTML5',
-        value: 'HTML5',
-        children: []
-    }, {
-        name: 'XML',
-        value: 'XML',
-        children: []
-    }]
-}]
-
-//let treeValues;
-window.treeValues = [];
-//let treeRelatinVals;
-window.treeRelatinVals;
-//let childOfArr = [];
-
-const slot = document.createElement('div')
-slot.innerHTML = '<a class="test" href="">Add new element</a>'
-const domEl = document.querySelector('.treeselect-test')
-const treeselect = new Treeselect({
-    parentHtmlContainer: domEl,
-    value: [],
-    options: testOption,
-    alwaysOpen: false,
-    showTags: true,
-    appendToBody: true,
-    listSlotHtmlComponent: null,
-    disabled: false,
-    isGroupedValue: false,
-    expandSelected: true,
-    isIndependentNodes: false,
-    emptyText: 'No data text',
-})
-treeselect.srcElement.addEventListener('input', (e) => {
-  console.log("getting Child Values", treeselect.value);
-  window.treeValues = treeselect.value; 
-  console.log("Parent RelationData",  e.detail);
-  window.treeRelatinVals = e.detail;
-})
-
-/*document.getElementById("result-Btn").addEventListener('click', (e) => {
-    console.log('Result', treeValues, treeRelatinVals);
-    
-    treeRelatinVals.map(relateVal => {
-        const existItem = childOfArr.find(chItem => chItem == relateVal.childOf);
-        if(!existItem){
-            childOfArr.push(relateVal.childOf);
-        }
+    console.log("testOption", testOption);
+    const slot = document.createElement('div')
+    slot.innerHTML = '<a class="test" href="">Add new element</a>'
+    const domEl = document.querySelector('.family_tree')
+    const treeselect = new Treeselect({
+        parentHtmlContainer: domEl,
+        value: [],
+        options: testOption,
+        alwaysOpen: false,
+        showTags: true,
+        appendToBody: true,
+        listSlotHtmlComponent: null,
+        disabled: false,
+        isGroupedValue: false,
+        expandSelected: true,
+        isIndependentNodes: false,
+        emptyText: 'No data text',
     })
-    console.log("ParentName Array", childOfArr);
-})
-  */
 
-function formSubmitOrButtonClick() {
-    
 
-    console.log('Result', treeValues, treeRelatinVals);
+    treeselect.srcElement.addEventListener('input', (e) => {
+        console.log("getting Child Values", treeselect.value);
+        window.treeValues = treeselect.value;
+        console.log("Parent RelationData", e.detail);
+        window.treeRelatinVals = e.detail;
+    })
+
 }
