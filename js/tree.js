@@ -68,7 +68,7 @@ const options = [{
 
 let treeValues;
 let treeRelatinVals;
-
+let childOfArr = [];
 const slot = document.createElement('div')
 slot.innerHTML = '<a class="test" href="">Add new element</a>'
 const domEl = document.querySelector('.treeselect-test')
@@ -95,9 +95,19 @@ treeselect.srcElement.addEventListener('input', (e) => {
 
 document.getElementById("result-Btn").addEventListener('click', (e) => {
     console.log('Result', treeValues, treeRelatinVals);
+    
+    treeRelatinVals.map(relateVal => {
+        const existItem = childOfArr.find(chItem => chItem == relateVal.childOf);
+        if(!existItem){
+            childOfArr.push(relateVal.childOf);
+        }
+    })
+    console.log("ParentName Array", childOfArr);
 })
   
 
 function formSubmitOrButtonClick() {
+    
+
     console.log('Result', treeValues, treeRelatinVals);
 }
