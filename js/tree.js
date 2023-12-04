@@ -64,14 +64,15 @@ function makeOptions(apiArr){
 
 function assignvar(){
     const testOption = makeOptions(family_api_array);
-
-    console.log("testOption", testOption);
+    let defaultVals = [];
+    testOption[0].children.map(childItem => defaultVals.push(childItem.value));
+    console.log("testOption", testOption, defaultVals);
     const slot = document.createElement('div')
     slot.innerHTML = '<a class="test" href="">Add new element</a>'
     const domEl = document.querySelector('.family_tree')
     const treeselect = new Treeselect({
         parentHtmlContainer: domEl,
-        value: [],
+        value: defaultVals,
         options: testOption,
         alwaysOpen: false,
         showTags: true,
