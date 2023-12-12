@@ -1,13 +1,13 @@
 <html>
 <head>
-    <link rel="stylesheet" href="./lib/treeselectjs.css" />
-    
-  <link href="https://www.cssscript.com/demo/sticky.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="./lib/treeselectjs.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<link href="https://www.cssscript.com/demo/sticky.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
-  <div class="treeselect-test" >
-  </div>
+  <div class="family_tree" >
+</div>
 
 
   <button id="result-Btn" onclick="callBtnVals()"
@@ -21,21 +21,22 @@
 
 </script>
 <script >
-  let childOfArr = [];
   function callBtnVals(){
-    if(window.treeRelatinVals){
-      console.log('Result', treeValues, treeRelatinVals);
-      treeRelatinVals.map(relateVal => {
+    let childOfArr = [];
+    if(window.treeRelatinVals ){
+      //console.log('Result', treeValues, treeRelatinVals);
+      window.treeRelatinVals.map(relateVal => {
           const existItem = childOfArr.find(chItem => chItem == relateVal.childOf);
           if(!existItem){
               childOfArr.push(relateVal.childOf);
           }
       })
-      console.log("ParentName Array", childOfArr);
+      //console.log("ParentName Array", childOfArr);
     }else{
       console.log("Empty Data")
     }
-    
+    console.log("------Familes ------------ "+ childOfArr);
+    console.log("------Api Ids ------------ "+ treeValues);
   }
 </script>
 </html>
